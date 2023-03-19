@@ -4,6 +4,7 @@ import {
     PrimaryGeneratedColumn,
     CreateDateColumn,
     ManyToOne,
+    UpdateDateColumn,
 } from "typeorm";
 
 import { User } from "./User";
@@ -15,6 +16,9 @@ export class Bodyweight {
 
     @CreateDateColumn()
     created_at: Date;
+
+    @UpdateDateColumn()
+    updated_at: Date;
 
     @Column("decimal")
     kg: number;

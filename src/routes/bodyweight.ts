@@ -1,6 +1,6 @@
 import { User } from "../models/User";
 import { Request, Response } from "express";
-import { getEntryByUuid } from "src/helpers/uuid";
+import { getEntryByUuid } from "../helpers/uuid";
 import { bodyweightRepo } from "src/db_conn";
 
 const express = require("express");
