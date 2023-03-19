@@ -14,6 +14,8 @@ export class Note {
     @Column("text")
     content: string;
 
-    @ManyToOne(() => User, (user) => user.notes)
+    @ManyToOne(() => User, (user) => user, {
+        cascade: true,
+    })
     user: User;
 }

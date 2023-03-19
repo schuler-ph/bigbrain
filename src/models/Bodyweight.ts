@@ -19,6 +19,8 @@ export class Bodyweight {
     @Column("decimal")
     kg: number;
 
-    @ManyToOne(() => User, (user) => user.bw_entries)
+    @ManyToOne(() => User, (user) => user, {
+        cascade: true,
+    })
     user: User;
 }

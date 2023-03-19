@@ -3,11 +3,7 @@ import {
     Column,
     PrimaryGeneratedColumn,
     CreateDateColumn,
-    OneToMany,
 } from "typeorm";
-
-import { Bodyweight } from "./Bodyweight";
-import { Note } from "./Note";
 
 @Entity()
 export class User {
@@ -21,10 +17,4 @@ export class User {
 
     @CreateDateColumn()
     created_at: Date;
-
-    @OneToMany(() => Bodyweight, (bodyweight) => bodyweight.user)
-    bw_entries: Bodyweight[];
-
-    @OneToMany(() => Note, (note) => note.user)
-    notes: Note[];
 }
