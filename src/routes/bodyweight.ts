@@ -1,7 +1,6 @@
-import { User } from "../models/User";
 import { Request, Response } from "express";
-import { getEntryByUuid } from "../helpers/uuid";
-import { bodyweightRepo } from "src/db_conn";
+import { validateUuidEntity } from "../helpers/uuid";
+import { bodyweightRepo } from "../db_conn";
 
 const express = require("express");
 const router = express.Router();
@@ -18,20 +17,24 @@ router.get("/bodyweight", async (req: Request, res: Response) => {
 
 // get all entries from user uuid
 router.get("/bodyweight/:uuid", async (req: Request, res: Response) => {
-    const user = <User>await getEntryByUuid(req.params.uuid, "user", res);
-    if (user !== null) {
-        const bw_entries = await bodyweightRepo.findBy({ user: user });
-        res.send(bw_entries);
+    if (await validateUuidEntity(req.params.uuid, res, "user")) {
+        const bw_entries = await bodyweightRepo.find({
+            where: {
+                user: {
+                    user_uuid: req.params.uuid,
+                },
+            },
+        });
+        res.json(bw_entries);
     }
 });
 
 // post one entry
 router.post("/bodyweight", async (req: Request, res: Response) => {
-    const user = <User>await getEntryByUuid(req.body.uuid, "user", res);
-    if (user !== null) {
+    if (await validateUuidEntity(req.body.uuid, res, "user")) {
         const bwEntry = bodyweightRepo.create({
             kg: req.body.kg,
-            user,
+            fk_user_bw: req.body.uuid,
         });
         bodyweightRepo.save(bwEntry);
         res.status(201).send({ message: "Bodyweight entry created" });

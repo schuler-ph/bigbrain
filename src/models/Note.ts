@@ -23,15 +23,18 @@ export class Note {
 
     @Column({
         length: 100,
-        unique: true,
     })
     title: string;
 
     @Column("text")
     content: string;
 
-    @ManyToOne(() => User, (user) => user, {
+    @ManyToOne((type) => User, (user) => user, {
         cascade: true,
     })
+    @JoinColumn({ name: "fk_user_note", referencedColumnName: "user_uuid" })
     user: User;
+
+    @Column("uuid")
+    fk_user_note: string;
 }

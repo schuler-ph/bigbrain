@@ -5,6 +5,7 @@ import {
     CreateDateColumn,
     ManyToOne,
     UpdateDateColumn,
+    JoinColumn,
 } from "typeorm";
 
 import { User } from "./User";
@@ -23,8 +24,12 @@ export class Bodyweight {
     @Column("decimal")
     kg: number;
 
-    @ManyToOne(() => User, (user) => user, {
+    @ManyToOne((type) => User, (user) => user, {
         cascade: true,
     })
+    @JoinColumn({ name: "fk_user_bw", referencedColumnName: "user_uuid" })
     user: User;
+
+    @Column("uuid")
+    fk_user_bw: string;
 }
