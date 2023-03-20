@@ -7,8 +7,7 @@ import {
     UpdateDateColumn,
     JoinColumn,
 } from "typeorm";
-
-import { User } from "./User";
+import { User } from "src/models/User";
 
 @Entity()
 export class Bodyweight {

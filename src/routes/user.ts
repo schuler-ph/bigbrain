@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { validateUuidEntity } from "../helpers/uuid";
-import { userRepo } from "../db_conn";
+import { validateUuidEntity } from "src/helpers/uuid";
+import { userRepo } from "src/db_conn";
 
 const express = require("express");
 const router = express.Router();

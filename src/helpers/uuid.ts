@@ -16,7 +16,7 @@ export const validateUuidEntity = async (
     res: Response,
     entity: String
 ) => {
-    let result;
+    let result = null;
     if (validateUuid(uuid, res)) {
         switch (entity) {
             case "user":
@@ -32,9 +32,7 @@ export const validateUuidEntity = async (
             res.status(404).send({
                 error: `No ${entity} entry found with this uuid`,
             });
-            return null;
         }
-        return result;
     }
-    return null;
+    return result;
 };

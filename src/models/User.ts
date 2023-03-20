@@ -5,7 +5,6 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
 } from "typeorm";
-
 import { userRepo } from "src/db_conn";
 
 @Entity()

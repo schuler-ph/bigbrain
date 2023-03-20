@@ -2,7 +2,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 const express = require("express");
 import "reflect-metadata";
-import db_conn from "./db_conn";
+import db_conn from "src/db_conn";
 
 db_conn
     .initialize()

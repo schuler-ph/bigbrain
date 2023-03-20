@@ -1,7 +1,7 @@
-import { User } from "./models/User";
-import { Bodyweight } from "./models/Bodyweight";
-import { Note } from "./models/Note";
 import { DataSource } from "typeorm";
+import { User } from "src/models/User";
+import { Bodyweight } from "src/models/Bodyweight";
+import { Note } from "src/models/Note";
 
 const db = new DataSource({
     type: "postgres",
