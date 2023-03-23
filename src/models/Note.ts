@@ -5,8 +5,9 @@ import {
     ManyToOne,
     CreateDateColumn,
     UpdateDateColumn,
+    JoinColumn,
 } from "typeorm";
-import { User } from "src/models/User";
+import { User } from "./User";
 
 @Entity()
 export class Note {
@@ -29,7 +30,7 @@ export class Note {
     @Column("text")
     content: string;
 
-    @ManyToOne((type) => User, (user) => user, {
+    @ManyToOne(() => User, (user) => user, {
         cascade: true,
     })
     @JoinColumn({ name: "fk_user_note", referencedColumnName: "user_uuid" })

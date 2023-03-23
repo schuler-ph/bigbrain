@@ -1,10 +1,10 @@
 import { DataSource } from "typeorm";
-import { User } from "src/models/User";
-import { Bodyweight } from "src/models/Bodyweight";
-import { Note } from "src/models/Note";
-import { Exercise } from "src/models/Exercise";
-import { MuscleGroup } from "src/models/MuscleGroup";
-import { MgToEx } from "src/models/MgToEx";
+import { User } from "./models/User";
+import { Bodyweight } from "./models/Bodyweight";
+import { Note } from "./models/Note";
+import { Exercise } from "./models/Exercise";
+import { MuscleGroup } from "./models/MuscleGroup";
+import { MgToEx } from "./models/MgToEx";
 
 const db = new DataSource({
     type: "postgres",

@@ -1,5 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
-import { MgToEx } from "src/models/MgToEx";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { MgToEx } from "./MgToEx";
 
 @Entity()
 export class Exercise {
@@ -12,7 +12,7 @@ export class Exercise {
     @Column("text")
     description: string;
 
-    @OneToMany(() => MgToEx, (mgToEx) => mgToEx.exercise)
+    @OneToMany(() => MgToEx, (mgToEx: MgToEx) => mgToEx.exercise)
     mgToEx: MgToEx[];
 }
 

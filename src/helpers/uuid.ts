@@ -1,6 +1,6 @@
 import { validate } from "uuid";
 import { Response } from "express";
-import { userRepo } from "src/db_conn";
+import { userRepo } from "../db_conn";
 
 export const validateUuid = (uuid: string, res: Response) => {
     if (validate(uuid)) {
@@ -35,4 +35,56 @@ export const validateUuidEntity = async (
         }
     }
     return result;
+};
+
+export const requestBodyContains = (
+    body: Object,
+    res: Response,
+    fields: string[]
+) => {
+    let valid = true;
+
+    fields.forEach((f) => {
+        if (!body.hasOwnProperty(f)) {
+            valid = false;
+        }
+    });
+
+    if (!valid) {
+        res.status(400).send({ error: "Parameters missing in request body" });
+    }
+
+    return valid;
+};
+
+export const usernameAlreadyExists = async (username: string) => {
+    return await userRepo.findOne({
+        where: {
+            username,
+        },
+    });
+};
+
+export const emailAlreadyExists = async (email: string) => {
+    return await userRepo.findOne({
+        where: {
+            email,
+        },
+    });
+};
+
+export const usernameOrEmailAlreadyExists = async (
+    username: string,
+    email: string,
+    res: Response
+) => {
+    if (await usernameAlreadyExists(username)) {
+        res.status(409).send({ error: "Username already exists" });
+        return true;
+    }
+    if (await emailAlreadyExists(email)) {
+        res.status(409).send({ error: "Email already exists" });
+        return true;
+    }
+    return false;
 };

@@ -5,7 +5,7 @@ import {
     ManyToOne,
     JoinColumn,
 } from "typeorm";
-import { User } from "src/models/User";
+import { User } from "./User";
 
 @Entity()
 export class Bodyweight {
@@ -18,7 +18,7 @@ export class Bodyweight {
     @Column("decimal")
     kg: number;
 
-    @ManyToOne((type) => User, (user) => user, {
+    @ManyToOne(() => User, (user) => user, {
         cascade: true,
     })
     @JoinColumn({ name: "fk_user_bw", referencedColumnName: "user_uuid" })

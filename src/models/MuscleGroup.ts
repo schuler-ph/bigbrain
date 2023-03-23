@@ -1,5 +1,5 @@
-import { Entity, Column, PrimaryColumn, OneToMany } from "typeorm";
-import { MgToEx } from "src/models/MgToEx";
+import { Entity, Column, PrimaryColumn, OneToMany, ManyToOne } from "typeorm";
+import { MgToEx } from "./MgToEx";
 
 @Entity()
 export class MuscleGroup {
@@ -9,10 +9,13 @@ export class MuscleGroup {
     @Column()
     name: string;
 
-    @Column()
+    @ManyToOne(
+        () => MuscleGroup,
+        (muscleGroup: MuscleGroup) => muscleGroup.part_of_mg
+    )
     part_of_mg: MuscleGroup;
 
-    @OneToMany(() => MgToEx, (mgToEx) => mgToEx.muscleGroup)
+    @OneToMany(() => MgToEx, (mgToEx: MgToEx) => mgToEx.muscleGroup)
     mgToEx: MgToEx[];
 }
 

@@ -2,7 +2,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 const express = require("express");
 import "reflect-metadata";
-import db_conn from "src/db_conn";
+import db_conn from "./db_conn";
 
 db_conn
     .initialize()
@@ -22,4 +22,4 @@ app.use("/api", userRoutes);
 const bodyweightRoutes = require("./routes/bodyweight");
 app.use("/api", bodyweightRoutes);
 
-app.listen(3000);
+app.listen(3001);

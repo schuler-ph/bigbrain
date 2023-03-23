@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
-import { validateUuidEntity } from "src/helpers/uuid";
-import { bodyweightRepo } from "src/db_conn";
+import { validateUuidEntity } from "../helpers/uuid";
+import { bodyweightRepo } from "../db_conn";
 
 const express = require("express");
 const router = express.Router();
 
 // get all entries
 router.get("/bodyweight", async (req: Request, res: Response) => {
+    req;
     const bwEntries = await bodyweightRepo.find({
         relations: {
             user: true,
@@ -32,7 +33,7 @@ router.get("/bodyweight/:uuid", async (req: Request, res: Response) => {
 // post one entry
 router.post("/bodyweight", async (req: Request, res: Response) => {
     if (await validateUuidEntity(req.body.uuid, res, "user")) {
-        const alreadyExists = await bodyweightRepo.find({
+        const alreadyExists = await bodyweightRepo.findOne({
             where: {
                 fk_user_bw: req.body.uuid,
                 measured_at: req.body.measured_at,

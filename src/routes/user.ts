@@ -1,12 +1,17 @@
 import { Request, Response } from "express";
-import { validateUuidEntity } from "src/helpers/uuid";
-import { userRepo } from "src/db_conn";
+import {
+    requestBodyContains,
+    usernameOrEmailAlreadyExists,
+    validateUuidEntity,
+} from "../helpers/uuid";
+import { userRepo } from "../db_conn";
 
 const express = require("express");
 const router = express.Router();
 
 // get all users
 router.get("/users", async (req: Request, res: Response) => {
+    req;
     const users = await userRepo.find();
     res.json(users);
 });
@@ -20,21 +25,39 @@ router.get("/users/:uuid", async (req: Request, res: Response) => {
 });
 
 // add new user
-router.post("/users", (req: Request, res: Response) => {
-    const user = userRepo.create({
-        username: req.body.username,
-    });
-    userRepo.save(user);
-    res.status(201).send({ message: "User created" });
+router.post("/users", async (req: Request, res: Response) => {
+    if (
+        requestBodyContains(req.body, res, ["username", "email", "password"]) &&
+        !(await usernameOrEmailAlreadyExists(
+            req.body.username,
+            req.body.email,
+            res
+        ))
+    ) {
+        const user = userRepo.create({
+            username: req.body.username,
+            email: req.body.email,
+            password: req.body.password,
+        });
+        userRepo.save(user);
+        res.status(201).send({ message: "User created" });
+    }
 });
 
 // edit user
 router.patch("/users/:uuid", async (req: Request, res: Response) => {
     const user = await validateUuidEntity(req.params.uuid, res, "user");
-    if (user !== null) {
+    if (
+        user !== null &&
+        requestBodyContains(req.body, res, ["username", "email"]) &&
+        !(await usernameOrEmailAlreadyExists(
+            req.body.username,
+            req.body.email,
+            res
+        ))
+    ) {
         user.username = req.body.username;
         user.email = req.body.email;
-        user.password = req.body.password;
 
         userRepo.save(user);
         res.status(200).send({ message: "User updated" });
@@ -43,16 +66,9 @@ router.patch("/users/:uuid", async (req: Request, res: Response) => {
 
 // delete user
 router.delete("/users/:uuid", async (req: Request, res: Response) => {
-    if (validate(req.params.uuid)) {
-        const result = await userRepo.delete(req.params.uuid);
-
-        if (result.affected === 1) {
-            res.status(200).send({ message: "User deleted" });
-        } else {
-            res.status(404).send({ error: "No user found with this uuid" });
-        }
-    } else {
-        res.status(400).send({ error: "Invalid uuid parameter" });
+    if (await validateUuidEntity(req.params.uuid, res, "user")) {
+        await userRepo.delete(req.params.uuid);
+        res.status(200).send({ message: "User deleted" });
     }
 });
 
