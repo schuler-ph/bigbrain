@@ -32,12 +32,28 @@ router.get("/bodyweight/:uuid", async (req: Request, res: Response) => {
 // post one entry
 router.post("/bodyweight", async (req: Request, res: Response) => {
     if (await validateUuidEntity(req.body.uuid, res, "user")) {
-        const bwEntry = bodyweightRepo.create({
-            kg: req.body.kg,
-            fk_user_bw: req.body.uuid,
+        const alreadyExists = await bodyweightRepo.find({
+            where: {
+                fk_user_bw: req.body.uuid,
+                measured_at: req.body.measured_at,
+            },
         });
-        bodyweightRepo.save(bwEntry);
-        res.status(201).send({ message: "Bodyweight entry created" });
+
+        if (alreadyExists === null) {
+            const bwEntry = bodyweightRepo.create({
+                kg: req.body.kg,
+                measured_at: req.body.measured_at,
+                fk_user_bw: req.body.uuid,
+            });
+            bodyweightRepo.save(bwEntry);
+            res.status(201).send({ message: "Bodyweight entry created" });
+        } else if (req.body.force) {
+            alreadyExists.kg = req.body.kg;
+            bodyweightRepo.save(alreadyExists);
+            res.status(200).send({ message: "Bodyweight entry updated" });
+        } else {
+            res.status(409).send({ error: "Data already exists for this day" });
+        }
     }
 });
 
